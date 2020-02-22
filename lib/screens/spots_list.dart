@@ -1,16 +1,20 @@
 import 'package:elcity/blocs/spot/spot.dart';
 import 'package:elcity/common/common.dart';
+import 'package:elcity/global.dart';
 import 'package:elcity/widgets/spot_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:elcity/screens/dashboard_page.dart';
+import 'package:page_transition/page_transition.dart';
 
 class SpotsList extends StatefulWidget {
   @override
   _SpotsListState createState() => _SpotsListState();
 }
 
-class _SpotsListState extends State<SpotsList> {
+class _SpotsListState extends State<SpotsList>
+    with AutomaticKeepAliveClientMixin<SpotsList> {
   final _scrollController = ScrollController();
   final _scrollThreshold = 200.0;
   SpotBloc _postBloc;
@@ -24,6 +28,7 @@ class _SpotsListState extends State<SpotsList> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocBuilder<SpotBloc, SpotState>(
       builder: (context, state) {
         if (state is SpotUninitialized) {
@@ -33,25 +38,60 @@ class _SpotsListState extends State<SpotsList> {
         }
         if (state is SpotError) {
           return Center(
-            child: Text('failed to fetch spots'),
+            child: Column(
+              children: <Widget>[
+                Text('failed to fetch spots'),
+                RaisedButton(
+                  child: Text('try again'),
+                  onPressed: () {
+                    _postBloc.add(Fetch());
+                  },
+                )
+              ],
+            ),
           );
         }
         if (state is SpotLoaded) {
           if (state.spots.isEmpty) {
             return Center(
-              child: Text('no spots'),
+              child: Column(
+                children: <Widget>[
+                  Text('no spots'),
+                  RaisedButton(
+                    child: Text('try again'),
+                    onPressed: () {
+                      _postBloc.add(Fetch());
+                    },
+                  )
+                ],
+              ),
             );
           }
-          return ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              return index >= state.spots.length
-                  ? BottomLoader()
-                  : SpotWidget(spot: state.spots[index]);
+          return RefreshIndicator(
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: AlwaysScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return SelectLocationW();
+                }
+                int numOfExtraW = 1;
+                index = index - numOfExtraW;
+                return index >= state.spots.length
+                    ? BottomLoader()
+                    : SpotWidget(
+                        spot: state.spots[index],
+                        owner: false,
+                      );
+              },
+              itemCount: state.hasReachedMax
+                  ? state.spots.length + 1
+                  : state.spots.length + 2,
+              controller: _scrollController,
+            ),
+            onRefresh: () async {
+              _postBloc.add(ForceRefresh());
             },
-            itemCount: state.hasReachedMax
-                ? state.spots.length
-                : state.spots.length + 1,
-            controller: _scrollController,
           );
         }
       },
@@ -67,10 +107,17 @@ class _SpotsListState extends State<SpotsList> {
   void _onScroll() {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
-    if (maxScroll - currentScroll <= _scrollThreshold) {
+    // if (maxScroll - currentScroll <= _scrollThreshold) {
+    //   _postBloc.add(Fetch());
+    // }
+    if (_scrollController.position.maxScrollExtent ==
+        _scrollController.offset) {
       _postBloc.add(Fetch());
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class BottomLoader extends StatelessWidget {
@@ -79,10 +126,52 @@ class BottomLoader extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       child: Center(
-        child: SizedBox(
-          width: 33,
-          height: 33,
-          child: LoadingIndicator()
+        child: SizedBox(width: 33, height: 70, child: LoadingIndicator()),
+      ),
+    );
+  }
+}
+
+class SelectLocationW extends StatelessWidget {
+  const SelectLocationW({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Card(
+        
+        shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: Colors.green,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(4))
+            ),
+
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                  flex: 1,
+                  child: Container(
+                    child: Icon(
+                      Icons.location_on,
+                      color: Colors.green,
+                    ),
+                  )),
+              Expanded(
+                flex: 6,
+                child: RaisedButton(onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: SelectLocationView(),
+                          type: PageTransitionType.upToDown
+                          ));
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );

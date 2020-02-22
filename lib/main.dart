@@ -1,3 +1,4 @@
+import 'package:elcity/global.dart';
 import 'package:elcity/resources/user_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -51,6 +52,9 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        accentColor: primaryColor,
+),
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is AuthenticationAuthenticated) {

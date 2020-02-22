@@ -17,10 +17,14 @@ class SpotError extends SpotState {}
 class SpotLoaded extends SpotState {
   final List<Spot> spots;
   final bool hasReachedMax;
+  final String nextUrl;
+  final int count;
 
   const SpotLoaded({
     this.spots,
     this.hasReachedMax,
+    this.nextUrl,
+    this.count,
   });
 
   SpotLoaded copyWith({
@@ -38,5 +42,5 @@ class SpotLoaded extends SpotState {
 
   @override
   String toString() =>
-      'PostLoaded { spots: ${spots.length}, hasReachedMax: $hasReachedMax }';
+      'SpotLoaded { spots: ${spots.length}, hasReachedMax: $hasReachedMax }';
 }

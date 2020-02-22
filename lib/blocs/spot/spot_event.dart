@@ -6,3 +6,4 @@ abstract class SpotEvent extends Equatable {
 }
 
 class Fetch extends SpotEvent {}
+class ForceRefresh extends SpotEvent{}
