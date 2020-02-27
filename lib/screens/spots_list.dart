@@ -1,6 +1,8 @@
 import 'package:elcity/blocs/spot/spot.dart';
 import 'package:elcity/common/common.dart';
 import 'package:elcity/global.dart';
+import 'package:elcity/screens/location_page.dart';
+import 'package:elcity/widgets/bottom_loader.dart';
 import 'package:elcity/widgets/spot_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -120,17 +122,7 @@ class _SpotsListState extends State<SpotsList>
   bool get wantKeepAlive => true;
 }
 
-class BottomLoader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Center(
-        child: SizedBox(width: 33, height: 70, child: LoadingIndicator()),
-      ),
-    );
-  }
-}
+
 
 class SelectLocationW extends StatelessWidget {
   const SelectLocationW({Key key}) : super(key: key);

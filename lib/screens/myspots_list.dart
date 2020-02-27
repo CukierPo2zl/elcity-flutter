@@ -74,8 +74,6 @@ with AutomaticKeepAliveClientMixin<MySpotsList>
               shrinkWrap: true,
               primary: false,
               itemBuilder: (BuildContext context, int index) { 
-                // int numOfExtraW = 1;
-                // index = index-numOfExtraW;
                 return SpotWidget(spot: state.spots[index], owner: true,);
               },
               itemCount: state.spots.length,

@@ -7,9 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
 class DashboardPage extends StatelessWidget {
-  final pageController = PageController(
-    initialPage: 1,
-  );
+
   @override
   Widget build(BuildContext context) {
     return 
@@ -24,15 +22,3 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-class SelectLocationView extends StatelessWidget {
-  
-  const SelectLocationView({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: RaisedButton(onPressed: (){
-        Navigator.pop(context);
-      }),
-    );
-  }}

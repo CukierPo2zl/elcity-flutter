@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   PageController pageController = PageController(
-    initialPage: 1,
+    initialPage: 0,
     keepPage: true,
   );
 
@@ -76,9 +76,6 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: Colors.white,
         elevation: 1.0,
-        // actions: <Widget>[
-        //   IconButton(icon: Icon(Icons.settings), onPressed: null)
-        // ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(

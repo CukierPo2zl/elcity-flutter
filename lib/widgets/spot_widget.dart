@@ -1,5 +1,5 @@
 import 'package:elcity/models/spots.dart';
-import 'package:elcity/widgets/spot_detail.dart';
+import 'package:elcity/screens/spot_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:page_transition/page_transition.dart';
